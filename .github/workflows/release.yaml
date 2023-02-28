@@ -1,0 +1,80 @@
+name: Build action
+
+on:
+  workflow_dispatch:
+  push:
+  schedule:
+    - cron: '15 3 * * *'  # every day at 03:15 (just wanted to avoid midnight)
+
+concurrency: 
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
+jobs:
+  build:
+    name: Build image
+    runs-on: ubuntu-latest
+
+    # https://docs.github.com/en/actions/reference/authentication-in-a-workflow
+    permissions:
+      id-token: write
+      packages: write
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Generate snapshot date
+        id: snapshot-date
+        run: |
+          echo ::set-output name=date::$(date -u +%Y%m%d)
+          echo ::set-output name=epoch::$(date -u +%s)
+        shell: bash
+
+      - uses: actions/checkout@main
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      
+      - name: Install qemu-user
+        run: sudo apt-get install -y qemu-user
+
+      - uses: sigstore/cosign-installer@main
+      
+      - uses: chainguard-dev/actions/melange-build@main
+        with:
+          config: hello.melange.yaml
+          sign-with-temporary-key: true
+          archs: x86_64,aarch64
+
+      - uses: chainguard-images/actions/apko-publish@e61cb0631c83e84cadc21337be090ad06bf05da2
+        id: apko
+        with:
+          config: latest.apko.yaml
+          tag: ghcr.io/${{ github.repository }}:latest
+          keyring-append: /github/workspace/melange.rsa.pub
+          source-date-epoch: ${{ steps.snapshot-date.outputs.epoch }}
+
+      - uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ github.token }}
+
+      - shell: bash
+        run: |
+          COSIGN_EXPERIMENTAL=true cosign sign ${{ steps.apko.outputs.digest }}
+          
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.apko.outputs.digest }}
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
