@@ -7,20 +7,56 @@ contents:
   packages:
     - wolfi-baselayout
     - busybox
-    - hello@local
+    - argocd@local
+    - helm
+    - kustomize
+    - git
+    - git-lfs
+    - tzdata
+    - openssh-server
+    - zip
 
 accounts:
   groups:
-    - groupname: nonroot
-      gid: 65532
+    - groupname: argocd
+      gid: 999
   users:
-    - username: nonroot
-      uid: 65532
-      gid: 65532
-  run-as: 65532
+    - username: argocd
+      uid: 999
+      gid: 999
+  run-as: 999
+
+paths:
+  - path: /app/config
+    type: directory
+    uid: 999
+    gid: 999
+    permissions: 0o755
+  - path: /app/config/ssh
+    uid: 999
+    gid: 999
+    type: directory
+    permissions: 0o755
+  - path: /app/config/tls
+    uid: 999
+    gid: 999
+    type: directory
+    permissions: 0o755
+  - path: /app/config/gpg/source
+    uid: 999
+    gid: 999
+    type: directory
+    permissions: 0o755
+  - path: /app/config/gpg/keys
+    uid: 999
+    gid: 999
+    type: directory
+    permissions: 0o700
+
+work-dir: /app/config
 
 entrypoint:
-  command: /usr/local/bin/hello
+  command: /usr/local/bin/argocd
 
 archs:
 - amd64

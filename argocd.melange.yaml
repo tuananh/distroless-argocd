@@ -1,0 +1,64 @@
+package:
+  name: argocd
+  version: 2.6.3
+  epoch: 0
+  description: Declarative continuous deployment for Kubernetes. 
+  target-architecture:
+    - all
+  copyright:
+    - paths:
+        - "*"
+      attestation: TODO
+      license: Apache-2.0
+  dependencies:
+    runtime:
+
+environment:
+  contents:
+    keyring:
+      - https://packages.wolfi.dev/os/wolfi-signing.rsa.pub
+    repositories:
+      - https://packages.wolfi.dev/os
+    packages:
+      - build-base
+      - busybox
+      - ca-certificates-bundle
+      - go
+      - nodejs-18
+      - yarn
+pipeline:
+  - uses: git-checkout
+    with:
+      repository: https://github.com/argoproj/argo-cd
+      tag: v${{package.version}}
+      expected-commit: e05298b9c6ab8610104271fa8491f019fee3c587
+      destination: argo-cd
+
+  - runs: |
+      cd argo-cd/ui
+      echo "build ArgoCD UI..."
+      yarn install --network-timeout 200000
+      yarn cache clean
+      HOST_ARCH=${{build.arch}} NODE_ENV='production' NODE_ONLINE_ENV='online' NODE_OPTIONS=--max_old_space_size=8192 yarn build
+
+  - runs: |
+      cd argo-cd
+      echo "build ArgoCD ..."
+      make argocd-all
+      mkdir -p ${{targets.destdir}}/usr/local/bin
+      mv ./dist/argocd* ${{targets.destdir}}/usr/local/bin
+      ls ${{targets.destdir}}/usr/local/bin
+      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-server
+      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-repo-server
+      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-cmp-server
+      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-application-controller
+      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-dex
+      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-notifications
+      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-applicationset-controller
+      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-k8s-auth
+
+      cp hack/git-ask-pass.sh ${{targets.destdir}}/usr/local/bin/git-ask-pass.sh
+      cp hack/gpg-wrapper.sh ${{targets.destdir}}/usr/local/bin/gpg-wrapper.sh
+      cp hack/git-verify-wrapper.sh ${{targets.destdir}}/usr/local/bin/git-verify-wrapper.sh
+      cp entrypoint.sh ${{targets.destdir}}/usr/local/bin/entrypoint.sh
+      ln -s ${{targets.destdir}}/usr/local/bin/entrypoint.sh ${{targets.destdir}}/usr/local/bin/uid_entrypoint.sh
