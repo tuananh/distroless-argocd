@@ -42,7 +42,7 @@ jobs:
       
       - uses: chainguard-dev/actions/melange-build@main
         with:
-          config: hello.melange.yaml
+          config: argocd.melange.yaml
           sign-with-temporary-key: true
           archs: x86_64,aarch64
 
