@@ -40,6 +40,6 @@ And everything is working as it supposes.
 
 ![](./argocd.png)
 
-## What's ne
+## What's next
 
 Let's open an issue in ArgoCD to see if they would accept an PR to build official ArgoCD image with melange & apko.
