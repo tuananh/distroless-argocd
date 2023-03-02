@@ -61,4 +61,4 @@ pipeline:
       cp hack/gpg-wrapper.sh ${{targets.destdir}}/usr/local/bin/gpg-wrapper.sh
       cp hack/git-verify-wrapper.sh ${{targets.destdir}}/usr/local/bin/git-verify-wrapper.sh
       cp entrypoint.sh ${{targets.destdir}}/usr/local/bin/entrypoint.sh
-      ln -s ${{targets.destdir}}/usr/local/bin/entrypoint.sh ${{targets.destdir}}/usr/local/bin/uid_entrypoint.sh
+      ln -s /usr/local/bin/entrypoint.sh ${{targets.destdir}}/usr/local/bin/uid_entrypoint.sh
