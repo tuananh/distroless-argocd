@@ -4,6 +4,14 @@
 
 This is a POC to build Argo CD container image with melange & apko.
 
+Benefits?
+
+- Actively rebuild everyday to get latest secfixes from upstream.
+- SBOM supported.
+- Small (265MB vs 379MB (for tag `v2.6.3`)).
+- Still multi-arch (same as the official one)
+- Fast build! Thanks to apko :)
+
 ## How I test it?
 
 Create a local KIND cluster with
@@ -35,11 +43,3 @@ And everything is working as it supposes.
 ## What's ne
 
 Let's open an issue in ArgoCD to see if they would accept an PR to build official ArgoCD image with melange & apko.
-
-Benefits?
-
-- Actively rebuild everyday to get latest secfixes from upstream.
-- SBOM supported.
-- Small (265MB vs 379MB (for tag `v2.6.3`)).
-- Still multi-arch (same as the official one)
-- Fast build! Thanks to apko :)
