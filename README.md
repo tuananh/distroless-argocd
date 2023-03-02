@@ -2,7 +2,7 @@
 
 ## What is this?
 
-This is a POC to build Argo CD container image with melange & apko.
+This is a POC to build Argo CD container image with [melange](https://github.com/chainguard-dev/melange) & [apko](https://github.com/chainguard-dev/apko).
 
 Benefits?
 
