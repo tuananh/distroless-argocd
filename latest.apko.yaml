@@ -5,17 +5,20 @@ contents:
     - https://packages.wolfi.dev/os
     - '@local /github/workspace/packages'
   packages:
-    - wolfi-baselayout
-    - busybox
     - argocd@local
-    - helm
-    - kustomize
+    - bash
+    - busybox
     - git
     - git-lfs
-    - tzdata
+    - gpg
+    - gpg-agent
+    - helm
+    - kustomize
     - openssh-server
+    - tini
+    - tzdata
+    - wolfi-baselayout
     - zip
-    - bash
 
 accounts:
   groups:
@@ -28,37 +31,55 @@ accounts:
   run-as: 999
 
 paths:
+  - path: /home/argocd
+    type: directory
+    permissions: 0o777
+    uid: 999
+    gid: 999
+  - path: /app
+    type: directory
+    uid: 999
+    gid: 999
+    permissions: 0o777
   - path: /app/config
     type: directory
     uid: 999
     gid: 999
-    permissions: 0o755
+    permissions: 0o777
   - path: /app/config/ssh
     uid: 999
     gid: 999
     type: directory
-    permissions: 0o755
+    permissions: 0o777
   - path: /app/config/tls
     uid: 999
     gid: 999
     type: directory
-    permissions: 0o755
+    permissions: 0o777
+  - path: /app/config/gpg
+    uid: 999
+    gid: 999
+    type: directory
+    permissions: 0o777
   - path: /app/config/gpg/source
     uid: 999
     gid: 999
     type: directory
-    permissions: 0o755
+    permissions: 0o777
   - path: /app/config/gpg/keys
     uid: 999
     gid: 999
     type: directory
-    permissions: 0o700
+    permissions: 0o777
 
-work-dir: /app/config
+work-dir: /home/argocd
 
 entrypoint:
   command: /usr/local/bin/entrypoint.sh
 
+environment:
+  GNUPGHOME: /app/config/gpg/keys
+  
 archs:
 - amd64
 - arm64

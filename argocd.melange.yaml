@@ -48,14 +48,14 @@ pipeline:
       mkdir -p ${{targets.destdir}}/usr/local/bin
       mv ./dist/argocd* ${{targets.destdir}}/usr/local/bin
       ls ${{targets.destdir}}/usr/local/bin
-      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-server
-      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-repo-server
-      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-cmp-server
-      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-application-controller
-      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-dex
-      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-notifications
-      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-applicationset-controller
-      ln -s ${{targets.destdir}}/usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-k8s-auth
+      ln -s /usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-server
+      ln -s /usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-repo-server
+      ln -s /usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-cmp-server
+      ln -s /usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-application-controller
+      ln -s /usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-dex
+      ln -s /usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-notifications
+      ln -s /usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-applicationset-controller
+      ln -s /usr/local/bin/argocd ${{targets.destdir}}/usr/local/bin/argocd-k8s-auth
 
       cp hack/git-ask-pass.sh ${{targets.destdir}}/usr/local/bin/git-ask-pass.sh
       cp hack/gpg-wrapper.sh ${{targets.destdir}}/usr/local/bin/gpg-wrapper.sh
