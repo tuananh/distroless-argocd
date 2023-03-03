@@ -7,6 +7,7 @@ This is a POC to build Argo CD container image with [melange](https://github.com
 Benefits?
 
 - Actively rebuild everyday to get latest secfixes from upstream.
+- Zero CVE 🔥🔥🔥 (Scanned with trivy) 
 - SBOM supported.
 - Small (265MB vs 379MB (for tag `v2.6.3`)).
 - Still multi-arch (same as the official one)
