@@ -62,7 +62,7 @@ jobs:
 
       - shell: bash
         run: |
-          COSIGN_EXPERIMENTAL=true cosign sign ${{ steps.apko.outputs.digest }}
+          COSIGN_EXPERIMENTAL=true cosign sign ${{ steps.apko.outputs.digest }} --yes
           
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
