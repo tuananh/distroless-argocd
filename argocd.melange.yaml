@@ -1,6 +1,6 @@
 package:
   name: argocd
-  version: 2.6.3
+  version: 2.6.4
   epoch: 0
   description: Declarative continuous deployment for Kubernetes. 
   target-architecture:
@@ -31,7 +31,7 @@ pipeline:
     with:
       repository: https://github.com/argoproj/argo-cd
       tag: v${{package.version}}
-      expected-commit: e05298b9c6ab8610104271fa8491f019fee3c587
+      expected-commit: 7be094f38d06859b594b98eb75c7c70d39b80b1e
       destination: argo-cd
 
   - runs: |
